@@ -90,3 +90,44 @@ if ("IntersectionObserver" in window) {
 } else {
   revealItems.forEach(item => item.classList.add("visible"));
 }
+
+
+
+ // Davaya contact form: redirect after successful submission
+const contactForm = document.getElementById("davaya-contact-form");
+
+if (contactForm) {
+  contactForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const submitButton = contactForm.querySelector('button[type="submit"]');
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Sending...";
+    }
+
+    try {
+      const response = await fetch(contactForm.action, {
+        method: "POST",
+        body: new FormData(contactForm),
+        headers: {
+          Accept: "application/json"
+        }
+      });
+
+      if (response.ok) {
+        window.location.href = "/thank-you.html";
+      } else {
+        alert("Your message could not be sent. Please try again.");
+      }
+    } catch (error) {
+      alert("Unable to send your message. Please check your connection and try again.");
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Send Message";
+      }
+    }
+  });
+}
